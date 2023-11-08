@@ -1,0 +1,65 @@
+#include <iostream>
+#include <conio.h>
+
+using namespace std;
+
+const int lignes = 20;
+const int colonnes = 10;
+int x = colonnes / 2;  // Position initiale de la croix
+int y = lignes / 2;
+
+void AfficherJeu() {
+    system("cls");  // Efface l'écran
+
+    // Affiche la bordure supérieure
+    for (int i = 0; i < colonnes + 2; i++) {
+        cout << "-";
+    }
+    cout << endl;
+
+    for (int i = 0; i < lignes; i++) {
+        cout << "|";  // Bordure gauche
+        for (int j = 0; j < colonnes; j++) {
+            if (i == y && j == x) {
+                cout << "+";  // Affiche la croix à sa position actuelle
+            } else {
+                cout << ".";
+            }
+        }
+        cout << "|";  // Bordure droite
+        cout << endl;
+    }
+
+    // Affiche la bordure inférieure
+    for (int i = 0; i < colonnes + 2; i++) {
+        cout << "-";
+    }
+    cout << endl;
+}
+
+int main() {
+    char touche;
+
+    do {
+        AfficherJeu();
+        touche = _getch();  // Attend une entrée clavier
+
+        // Déplace la croix en fonction de la touche appuyée
+        switch (touche) {
+            case 72:  // Flèche haut
+                if (y > 0) y--;
+                break;
+            case 80:  // Flèche bas
+                if (y < lignes - 1) y++;
+                break;
+            case 75:  // Flèche gauche
+                if (x > 0) x--;
+                break;
+            case 77:  // Flèche droite
+                if (x < colonnes - 1) x++;
+                break;
+        }
+    } while (touche != 27);  // 27 est le code ASCII de la touche Echap
+
+    return 0;
+}
