@@ -1,65 +1,113 @@
 #include <iostream>
 #include <conio.h>
 
-using namespace std;
 
-const int lignes = 20;
-const int colonnes = 10;
-int x = colonnes / 2;  // Position initiale de la croix
-int y = lignes / 2;
-
-void AfficherJeu() {
-    system("cls");  // Efface l'écran
-
-    // Affiche la bordure supérieure
-    for (int i = 0; i < colonnes + 2; i++) {
-        cout << "-";
-    }
-    cout << endl;
-
-    for (int i = 0; i < lignes; i++) {
-        cout << "|";  // Bordure gauche
-        for (int j = 0; j < colonnes; j++) {
-            if (i == y && j == x) {
-                cout << "+";  // Affiche la croix à sa position actuelle
-            } else {
-                cout << ".";
-            }
-        }
-        cout << "|";  // Bordure droite
-        cout << endl;
-    }
-
-    // Affiche la bordure inférieure
-    for (int i = 0; i < colonnes + 2; i++) {
-        cout << "-";
-    }
-    cout << endl;
-}
 
 int main() {
+    const int Longueur = 10; // Nombre de lignes
+    const int Largeur = 20;  // Nombre de colonnes
+
+    int x = Longueur / 2; // Position initiale en colonne
+    int y = Largeur / 2;  // Position initiale en ligne
+
+    char plateau[Longueur][Largeur];
+    char snoopy = 'X';
+
+
+    // Positions des ronds aux coins
+    int position_cercle_X[4] = {1, Largeur - 2, 1, Largeur - 2};
+    int position_cercle_Y[4] = {1, 1, Longueur - 2, Longueur - 2};
+
+
+    for (int i = 0; i < Longueur; i++) {
+        for (int j = 0; j < Largeur; j++) {
+            if (i == 0 || i == Longueur - 1 || j == 0 || j == Largeur - 1) {
+                plateau[i][j] = '#'; // Caractères de bordure
+            } else {
+                plateau[i][j] = ' ';
+            }
+        }
+    }
+
+
     char touche;
+    bool jeu = true;
 
-    do {
-        AfficherJeu();
-        touche = _getch();  // Attend une entrée clavier
+    bool cercle_recup[4] = {false, false, false, false}; // Pour suivre les cercles collectés
 
-        // Déplace la croix en fonction de la touche appuyée
+    while (jeu) {
+        system("cls"); // Efface la console (Windows)
+
+        // Affiche la grille
+        for (int i = 0; i < Longueur; i++) {
+            for (int j = 0; j < Largeur; j++) {
+                bool cercle_ou_pas = false;
+                for (int k = 0; k < 4; k++) {
+                    if (i == position_cercle_Y[k] && j == position_cercle_X[k]) {
+                        if (!cercle_recup[k]) {
+                            plateau[i][j] = 'O';
+                            cercle_ou_pas = true;
+                        }
+                    }
+                }
+                if (!cercle_ou_pas && plateau[i][j] != '#') {
+                    plateau[i][j] = ' ';
+                }
+            }
+        }
+
+        // Affiche la croix
+        plateau[y][x] = snoopy;
+
+        // Vérifie si la croix a collecté les 4 cercles
+        bool tout_recup = true;
+        for (int k = 0; k < 4; k++) {
+            if (!cercle_recup[k] && y == position_cercle_Y[k] && x == position_cercle_X[k]) {
+                cercle_recup[k] = true;
+            }
+            if (!cercle_recup[k]) {
+                tout_recup = false;
+            }
+        }
+
+        // Affiche la grille mise à jour
+        for (int i = 0; i < Longueur; i++) {
+            for (int j = 0; j < Largeur; j++) {
+                std::cout << plateau[i][j];
+            }
+            std::cout << std::endl;
+        }
+
+        touche = _getch(); // Attend une saisie de touche
+
+        // Déplacement de la croix avec les touches fléchées
         switch (touche) {
-            case 72:  // Flèche haut
-                if (y > 0) y--;
+            case 27: // Touche Échap (27 est le code ASCII d'Échap)
+                jeu = false;
                 break;
-            case 80:  // Flèche bas
-                if (y < lignes - 1) y++;
+            case 72: // Flèche haut
+                if (y > 1) y--;
                 break;
-            case 75:  // Flèche gauche
-                if (x > 0) x--;
+            case 80: // Flèche bas
+                if (y < Longueur - 2) y++;
                 break;
-            case 77:  // Flèche droite
-                if (x < colonnes - 1) x++;
+            case 75: // Flèche gauche
+                if (x > 1) x--;
+                break;
+            case 77: // Flèche droite
+                if (x < Largeur - 2) x++;
+                break;
+            default:
                 break;
         }
-    } while (touche != 27);  // 27 est le code ASCII de la touche Echap
+
+        if (tout_recup) {
+            jeu = false;
+            std::cout << "Vous avez collecte tous les cercles. Vous avez gagne !" << std::endl;
+        }
+    }
 
     return 0;
 }
+
+
