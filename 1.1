@@ -1,0 +1,28 @@
+#include <iostream>
+#include <conio.h>
+
+int main() {
+    const int Longueur = 10; // Nombre de lignes
+    const int Largeur = 20;  // Nombre de colonnes
+
+    int x = Longueur / 2; // Position initiale en colonne
+    int y = Largeur / 2;  // Position initiale en ligne
+
+    char plateau[Longueur][Largeur];
+    char snoopy = 'X';
+
+
+    // Positions des ronds aux coins
+    int position_cercle_X[4] = {1, Largeur - 2, 1, Largeur - 2};
+    int position_cercle_Y[4] = {1, 1, Longueur - 2, Longueur - 2};
+
+
+    for (int i = 0; i < Longueur; i++) {
+        for (int j = 0; j < Largeur; j++) {
+            if (i == 0 || i == Longueur - 1 || j == 0 || j == Largeur - 1) {
+                plateau[i][j] = '#'; // Caractères de bordure
+            } else {
+                plateau[i][j] = ' ';
+            }
+        }
+    }
