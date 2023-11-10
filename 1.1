@@ -26,3 +26,51 @@ int main() {
             }
         }
     }
+
+    char touche;
+    bool jeu = true;
+
+    bool cercle_recup[4] = {false, false, false, false}; // Pour suivre les cercles collectés
+
+    while (jeu) {
+        system("cls"); // Efface la console (Windows)
+
+        // Affiche la grille
+        for (int i = 0; i < Longueur; i++) {
+            for (int j = 0; j < Largeur; j++) {
+                bool cercle_ou_pas = false;
+                for (int k = 0; k < 4; k++) {
+                    if (i == position_cercle_Y[k] && j == position_cercle_X[k]) {
+                        if (!cercle_recup[k]) {
+                            plateau[i][j] = 'O';
+                            cercle_ou_pas = true;
+                        }
+                    }
+                }
+                if (!cercle_ou_pas && plateau[i][j] != '#') {
+                    plateau[i][j] = ' ';
+                }
+            }
+        }
+
+        // Affiche la croix
+        plateau[y][x] = snoopy;
+
+        // Vérifie si la croix a collecté les 4 cercles
+        bool tout_recup = true;
+        for (int k = 0; k < 4; k++) {
+            if (!cercle_recup[k] && y == position_cercle_Y[k] && x == position_cercle_X[k]) {
+                cercle_recup[k] = true;
+            }
+            if (!cercle_recup[k]) {
+                tout_recup = false;
+            }
+        }
+
+        // Affiche la grille mise à jour
+        for (int i = 0; i < Longueur; i++) {
+            for (int j = 0; j < Largeur; j++) {
+                std::cout << plateau[i][j];
+            }
+            std::cout << std::endl;
+        }
